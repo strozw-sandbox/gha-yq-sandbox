@@ -30,7 +30,7 @@ jobs:
       - name: Check package.json NODE Version
         if: ${{ !contains(
             steps.parsedComposerJSON.outputs.result, 
-            format("^{0}", steps.versions.outputs.php)
+            format('^{0}', steps.versions.outputs.php)
           )}}
         run: echo 'composer.json dose not use a valid php version'
           exit 1
@@ -43,7 +43,7 @@ jobs:
       - name: Check package.json NODE Version
         if: ${{ !contains(
             steps.parsedPackageJSON.outputs.result, 
-            format("^{0}", steps.versions.outputs.node)
+            format('^{0}', steps.versions.outputs.node)
           )}}
         run: echo 'package.json dose not use a valid node version'
           exit 1
