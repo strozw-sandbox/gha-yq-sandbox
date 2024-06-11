@@ -1,0 +1,11 @@
+name: runtime-versions.yml
+
+on:
+  pull_request:
+
+jobs:
+  check_runtime_versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: yq --help
