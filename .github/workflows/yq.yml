@@ -1,0 +1,47 @@
+name: runtime-versions.yml
+
+on:
+  pull_request:
+    paths:
+      - README.md
+      - package.json
+
+jobs:
+  check_runtime_versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: versions
+        run: |
+          PHP_VERSION=`yq -f extract '.php' README.md`
+          NODE_VERSION=`yq -f extract '.["node.js"]' README.md`
+          echo "php=${PHP_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "node=${NODE_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - id: parsedComposerJSON
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.require.php' 'composer.json'
+
+      - name: Check package.json NODE Version
+        if: ${{ !contains(
+            steps.parsedComposerJSON.outputs.result, 
+            format("^{0}", steps.versions.outputs.php)
+          )}}
+        run: echo 'package.json use not valid node version'
+          exit 1
+
+      - id: parsedPackageJSON
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.engines.node' 'package.json'
+
+      - name: Check package.json NODE Version
+        if: ${{ !contains(
+            steps.parsedPackageJSON.outputs.result, 
+            format("^{0}", steps.versions.outputs.node)
+          )}}
+        run: echo 'package.json use not valid node version'
+          exit 1
