@@ -14,10 +14,9 @@ jobs:
       - run: yq --help
 
       - id: versions
-        shell: bash
         run: |
-          PHP_VERSION=${yq -f extract '.php' README.md}
-          NODE_VERSION=${yq -f extract '.["node.js"]' README.md}
+          PHP_VERSION=`yq -f extract '.php' README.md`
+          NODE_VERSION=`yq -f extract '.["node.js"]' README.md`
           echo "php=${PHP_VERSION}" >> "$GITHUB_OUTPUT"
           echo "node=${NODE_VERSION}" >> "$GITHUB_OUTPUT"
 
