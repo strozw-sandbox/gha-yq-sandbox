@@ -32,7 +32,7 @@ jobs:
             steps.parsedComposerJSON.outputs.result, 
             format("^{0}", steps.versions.outputs.php)
           )}}
-        run: echo 'package.json use not valid node version'
+        run: echo 'composer.json dose not use a valid php version'
           exit 1
 
       - id: parsedPackageJSON
@@ -45,5 +45,5 @@ jobs:
             steps.parsedPackageJSON.outputs.result, 
             format("^{0}", steps.versions.outputs.node)
           )}}
-        run: echo 'package.json use not valid node version'
+        run: echo 'package.json dose not use a valid node version'
           exit 1
