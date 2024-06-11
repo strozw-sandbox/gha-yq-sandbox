@@ -3,7 +3,9 @@ name: runtime-versions.yml
 on:
   pull_request:
     paths:
+      - .github/workflows/yq.yml
       - README.md
+      - composer.json
       - package.json
 
 jobs:
@@ -20,12 +22,28 @@ jobs:
           echo "php=${PHP_VERSION}" >> "$GITHUB_OUTPUT"
           echo "node=${NODE_VERSION}" >> "$GITHUB_OUTPUT"
 
+      - id: parsedComposerJSON
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.require.php' 'composer.json'
+
+      - name: Check package.json NODE Version
+        if: ${{ !contains(
+            steps.parsedComposerJSON.outputs.result, 
+            format('^{0}', steps.versions.outputs.php)
+          )}}
+        run: echo 'composer.json dose not use a valid php version'
+          exit 1
+
       - id: parsedPackageJSON
         uses: mikefarah/yq@master
         with:
           cmd: yq '.engines.node' 'package.json'
 
       - name: Check package.json NODE Version
-        if: ${{ !contains(steps.parsedPackageJSON.outputs.result, steps.versions.outputs.node) }}
-        run: echo 'package.json use not valid node version'
+        if: ${{ !contains(
+            steps.parsedPackageJSON.outputs.result, 
+            format('^{0}', steps.versions.outputs.node)
+          )}}
+        run: echo 'package.json dose not use a valid node version'
           exit 1
