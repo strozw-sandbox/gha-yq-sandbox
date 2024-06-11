@@ -3,6 +3,7 @@ name: runtime-versions.yml
 on:
   pull_request:
     paths:
+      - .github/workflows/yq.yml
       - README.md
       - composer.json
       - package.json
