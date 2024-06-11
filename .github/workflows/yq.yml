@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - README.md
+      - composer.json
       - package.json
 
 jobs:
